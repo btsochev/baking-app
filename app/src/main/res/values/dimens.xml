@@ -7,4 +7,8 @@
     <dimen name="app_bar_height">200dp</dimen>
     <dimen name="item_width">400dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="navigation_button_width">40dp</dimen>
+    <dimen name="navigation_button_height">40dp</dimen>
+    <dimen name="stepnum_width">100dp</dimen>
+    <dimen name="media_player_height">300dp</dimen>
 </resources>

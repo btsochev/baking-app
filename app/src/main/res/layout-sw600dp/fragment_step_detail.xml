@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/step_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.nanodegree.boyan.bakingapp.ui.StepDetailFragment">
+
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/button_previous"
+            android:layout_width="@dimen/navigation_button_width"
+            android:layout_height="@dimen/navigation_button_height"
+            android:src="@drawable/ic_keyboard_arrow_left_black_24dp"/>
+
+        <TextView
+            android:id="@+id/textview_stepnum"
+            android:layout_width="@dimen/stepnum_width"
+            android:layout_height="40dp"
+            android:padding="8dp"/>
+
+        <ImageButton
+            android:id="@+id/button_next"
+            android:layout_width="@dimen/navigation_button_width"
+            android:layout_height="@dimen/navigation_button_height"
+            android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/player_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/media_player_height"
+        android:padding="16dp">
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/player"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/no_media_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:src="@drawable/default_recipe_image" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/step_desc_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements IDataReceived, Re
 
     @Override
     public void onRecipeClicked(Recipe recipe) {
-        Intent intent = new Intent(MainActivity.this, RecipeListActivity.class);
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra("recipe", Parcels.wrap(recipe));
         startActivity(intent);
     }
