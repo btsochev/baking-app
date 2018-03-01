@@ -1,22 +1,61 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.nanodegree.boyan.bakingapp.ui.StepActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
 
-    <LinearLayout
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fitsSystemWindows="true"
+        tools:context="com.nanodegree.boyan.bakingapp.ui.StepActivity">
 
-        <FrameLayout
-            android:id="@+id/step_detail_container"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </FrameLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    </LinearLayout>
-</ScrollView>
+            <FrameLayout
+                android:id="@+id/step_detail_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <ImageButton
+                    android:id="@+id/previous_btn"
+                    android:layout_width="@dimen/navigation_button_width"
+                    android:layout_height="@dimen/navigation_button_height"
+                    android:src="@drawable/ic_keyboard_arrow_left_black_24dp"/>
+
+                <TextView
+                    android:id="@+id/stepnum_tv"
+                    android:layout_width="@dimen/stepnum_width"
+                    android:gravity="center_horizontal"
+                    android:layout_height="40dp"
+                    android:padding="8dp"/>
+
+                <ImageButton
+                    android:id="@+id/next_btn"
+                    android:layout_width="@dimen/navigation_button_width"
+                    android:layout_height="@dimen/navigation_button_height"
+                    android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+
+
+

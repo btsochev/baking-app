@@ -1,7 +1,6 @@
 package com.nanodegree.boyan.bakingapp.ui;
 
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +10,6 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,6 +38,7 @@ import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class StepDetailFragment extends Fragment {
@@ -50,7 +49,7 @@ public class StepDetailFragment extends Fragment {
     SimpleExoPlayerView playerView;
 
     @BindView(R.id.no_media_iv)
-    ImageView noMediaIV;
+    ImageView noMediaIv;
 
     @BindView(R.id.step_desc_tv)
     TextView stepDescription;
@@ -70,6 +69,7 @@ public class StepDetailFragment extends Fragment {
 
     public StepDetailFragment() {
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,22 +146,22 @@ public class StepDetailFragment extends Fragment {
     public void createMediaPlayer() {
 
         if (!StringHelpers.isNullOrEmpty(mStep.getVideoURL())) {
-            noMediaIV.setVisibility(View.GONE);
+            noMediaIv.setVisibility(View.GONE);
 
             initializeMediaSession();
             initializePlayer(Uri.parse(mStep.getVideoURL()));
 
         } else {
-            noMediaIV.setVisibility(View.VISIBLE);
+            noMediaIv.setVisibility(View.VISIBLE);
 
             if (!StringHelpers.isNullOrEmpty(mStep.getThumbnailURL())) {
                 Picasso.with(getContext())
                         .load(mStep.getThumbnailURL())
                         .placeholder(R.drawable.default_recipe_image)
                         .error(R.drawable.default_recipe_image)
-                        .into(noMediaIV);
+                        .into(noMediaIv);
             } else {
-                noMediaIV.setImageResource(R.drawable.default_recipe_image);
+                noMediaIv.setImageResource(R.drawable.default_recipe_image);
             }
         }
     }

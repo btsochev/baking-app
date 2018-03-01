@@ -46,22 +46,12 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailFra
 
         mRecipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("Recipe details");
-
-
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         if (findViewById(R.id.step_detail_container) != null) {
             mTwoPane = true;
         }
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
             arguments.putParcelable("recipe", Parcels.wrap(mRecipe));
             RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
@@ -71,7 +61,7 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailFra
                     .replace(R.id.container_recipe_detail, recipeDetailFragment)
                     .commit();
 
-        }else{
+        } else {
 
         }
     }
@@ -89,22 +79,21 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailFra
     @Override
     public void onStepClicked(int stepPosition) {
         isInDetail = true;
-            if (mTwoPane) {
-                Bundle arguments = new Bundle();
-                arguments.putParcelable("recipe", Parcels.wrap(mRecipe));
-                arguments.putInt("step_position", stepPosition);
-                StepDetailFragment fragment = new StepDetailFragment();
-                fragment.setArguments(arguments);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.step_detail_container, fragment)
-                        .commit();
-            } else {
-                Context context = getApplicationContext();
-                Intent intent = new Intent(context, StepActivity.class);
-                intent.putExtra("recipe", Parcels.wrap(mRecipe));
-                intent.putExtra("step_position", stepPosition);
+        if (mTwoPane) {
+            Bundle arguments = new Bundle();
+            arguments.putParcelable("recipe", Parcels.wrap(mRecipe));
+            arguments.putInt("step_position", stepPosition);
+            StepDetailFragment fragment = new StepDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.step_detail_container, fragment)
+                    .commit();
+        } else {
+            Intent intent = new Intent(DetailActivity.this, StepActivity.class);
+            intent.putExtra("recipe", Parcels.wrap(mRecipe));
+            intent.putExtra("step_position", stepPosition);
 
-                context.startActivity(intent);
-            }
+            startActivity(intent);
+        }
     }
 }
