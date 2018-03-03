@@ -54,8 +54,11 @@ public class RecipeDetailFragment extends Fragment implements StepsAdapter.Steps
 
         Recipe mRecipe = Parcels.unwrap(getArguments().getParcelable("recipe"));
 
-        for (Ingredient ingredient : mRecipe.getIngredients()) {
-            ingredients.append(String.format("%s %s %s \n", String.valueOf(ingredient.getQuantity()), ingredient.getMeasure(), ingredient.getIngredient()));
+        for (int i = 0; i < mRecipe.getIngredients().size(); i++) {
+            Ingredient ingredient = mRecipe.getIngredients().get(i);
+            ingredients.append(String.format("%s %s %s", String.valueOf(ingredient.getQuantity()), ingredient.getMeasure(), ingredient.getIngredient()));
+            if (i < mRecipe.getIngredients().size() -1)
+                ingredients.append("\n");
         }
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL);

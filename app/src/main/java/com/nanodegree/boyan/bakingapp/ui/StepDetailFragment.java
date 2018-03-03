@@ -4,9 +4,8 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,6 @@ import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 public class StepDetailFragment extends Fragment {
@@ -55,13 +53,12 @@ public class StepDetailFragment extends Fragment {
     TextView stepDescription;
 
     private static final String TAG = StepDetailFragment.class.getSimpleName();
+    private static final String SELECTED_POSITION = "player_selected_position";
 
     private Recipe mRecipe;
     private Step mStep;
 
     private SimpleExoPlayer mExoPlayer;
-    private MediaSessionCompat mMediaSession;
-    private PlaybackStateCompat.Builder mStateBuilder;
     private BandwidthMeter mBandwidthMeter;
     private TrackSelector mTrackSelector;
 
@@ -78,6 +75,7 @@ public class StepDetailFragment extends Fragment {
         mRecipe = Parcels.unwrap(getArguments().getParcelable("recipe"));
         int stepPosition = getArguments().getInt("step_position", 0);
         mStep = mRecipe.getSteps().get(stepPosition);
+
     }
 
     @Override
@@ -86,8 +84,12 @@ public class StepDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_step_detail, container, false);
         ButterKnife.bind(this, rootView);
 
+        stepDescription.setText(mStep.getDescription());
+
         if (savedInstanceState == null) {
             createMediaPlayer();
+        } else {
+            mPlayerPosition = savedInstanceState.getLong(SELECTED_POSITION, 0);
         }
         if (!getResources().getBoolean(R.bool.isTablet))
             resizeMediaPlayer();
@@ -100,6 +102,12 @@ public class StepDetailFragment extends Fragment {
             DisplayMetrics displayMetrics = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
             int height = displayMetrics.heightPixels;
+            int actionBarHeight = 0;
+            TypedValue tv = new TypedValue();
+            if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+                actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+            }
+            height -= actionBarHeight;
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
             playerView.setLayoutParams(layoutParams);
         } else {
@@ -123,6 +131,12 @@ public class StepDetailFragment extends Fragment {
         releasePlayer();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(SELECTED_POSITION, mPlayerPosition);
+    }
+
     private void releasePlayer() {
         if (mExoPlayer != null) {
             mPlayerPosition = mExoPlayer.getCurrentPosition();
@@ -134,10 +148,6 @@ public class StepDetailFragment extends Fragment {
             mExoPlayer = null;
         }
 
-        if (mMediaSession != null) {
-            mMediaSession.setActive(false);
-        }
-
         if (mTrackSelector != null) {
             mTrackSelector = null;
         }
@@ -146,12 +156,13 @@ public class StepDetailFragment extends Fragment {
     public void createMediaPlayer() {
 
         if (!StringHelpers.isNullOrEmpty(mStep.getVideoURL())) {
+            playerView.setVisibility(View.VISIBLE);
             noMediaIv.setVisibility(View.GONE);
 
-            initializeMediaSession();
             initializePlayer(Uri.parse(mStep.getVideoURL()));
 
         } else {
+            playerView.setVisibility(View.GONE);
             noMediaIv.setVisibility(View.VISIBLE);
 
             if (!StringHelpers.isNullOrEmpty(mStep.getThumbnailURL())) {
@@ -184,48 +195,6 @@ public class StepDetailFragment extends Fragment {
 
             mExoPlayer.setPlayWhenReady(true);
             mExoPlayer.seekTo(mPlayerPosition);
-        }
-    }
-
-    private void initializeMediaSession() {
-
-        mMediaSession = new MediaSessionCompat(getContext(), TAG);
-
-        mMediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-        mMediaSession.setMediaButtonReceiver(null);
-
-        mStateBuilder = new PlaybackStateCompat.Builder()
-                .setActions(
-                        PlaybackStateCompat.ACTION_PLAY |
-                                PlaybackStateCompat.ACTION_PAUSE |
-                                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
-                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
-
-        mMediaSession.setPlaybackState(mStateBuilder.build());
-        mMediaSession.setCallback(new MediaSessionCallback());
-        mMediaSession.setActive(true);
-    }
-
-    private class MediaSessionCallback extends MediaSessionCompat.Callback {
-
-        @Override
-        public void onPlay() {
-            super.onPlay();
-            mExoPlayer.setPlayWhenReady(true);
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-            mExoPlayer.setPlayWhenReady(false);
-        }
-
-        @Override
-        public void onSkipToPrevious() {
-            super.onSkipToPrevious();
-            mExoPlayer.seekTo(0);
         }
     }
 }

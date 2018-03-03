@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements IDataReceived, Re
     private int numberOfColumns() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        float widthDivider = Utils.convertDpToPixel(200f);
+        float widthDivider = Utils.convertDpToPixel(300f);
         int width = displayMetrics.widthPixels;
         int nColumns = (int) (width / widthDivider);
         if (nColumns < 2)

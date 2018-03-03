@@ -1,32 +1,15 @@
 package com.nanodegree.boyan.bakingapp.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.nanodegree.boyan.bakingapp.R;
-
-import com.nanodegree.boyan.bakingapp.data.Ingredient;
 import com.nanodegree.boyan.bakingapp.data.Recipe;
-import com.nanodegree.boyan.bakingapp.data.Step;
 
 import org.parceler.Parcels;
 
-import java.util.List;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.support.v4.app.NavUtils.navigateUpFromSameTask;
@@ -35,7 +18,6 @@ import static android.support.v4.app.NavUtils.navigateUpFromSameTask;
 public class DetailActivity extends AppCompatActivity implements RecipeDetailFragment.OnStepClickListener {
 
     private boolean mTwoPane;
-    private boolean isInDetail;
     private Recipe mRecipe;
 
     @Override
@@ -78,7 +60,6 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailFra
 
     @Override
     public void onStepClicked(int stepPosition) {
-        isInDetail = true;
         if (mTwoPane) {
             Bundle arguments = new Bundle();
             arguments.putParcelable("recipe", Parcels.wrap(mRecipe));
