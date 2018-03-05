@@ -48,6 +48,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         holder.name.setText(recipe.getName());
         holder.servingsCount.setText(String.format("Servings: %d", recipe.getServings()));
 
+
         if (recipe.getImage().isEmpty()) {
             holder.image.setImageResource(R.drawable.default_recipe_image);
         } else {
@@ -86,6 +87,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         public void onClick(View view) {
             mClickHandler.onRecipeClicked(recipe);
         }
+
     }
 
 

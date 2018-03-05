@@ -1,0 +1,159 @@
+package com.nanodegree.boyan.bakingapp.ui;
+
+import android.appwidget.AppWidgetManager;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+import com.nanodegree.boyan.bakingapp.R;
+import com.nanodegree.boyan.bakingapp.data.Ingredient;
+import com.nanodegree.boyan.bakingapp.data.Recipe;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class WidgetActivity extends AppCompatActivity {
+
+    public static final String WIDGET_RECIPE = "recipe_widget";
+    public static final String WIDGET_INGREDIENTS = "widget_ingredients";
+
+    final Context mContext = this;
+
+    private int mAppWidgetId;
+    public ArrayList<Recipe> mRecipeList;
+    private String[] mWidgetRecipe;
+    int mPrevRecipeId;
+
+    @BindView(R.id.recipe_options_rg)
+    RadioGroup mRadioGroupRecipeOptions;
+    @BindView(R.id.choose_recipe_btn)
+    Button mButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setResult(RESULT_CANCELED);
+        setContentView(R.layout.activity_widget);
+        ButterKnife.bind(this);
+
+        if (BakingApp.recipes == null) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+
+        mRecipeList = BakingApp.recipes;
+        mWidgetRecipe = new String[3];
+
+        processIntentExtras();
+        displayRecipeOptions();
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            mAppWidgetId = extras.getInt(
+                    AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID);
+        }
+
+
+        mButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                processWidgetRecipe();
+            }
+        });
+    }
+
+
+    public void displayRecipeOptions() {
+        mButton = findViewById(R.id.choose_recipe_btn);
+        RadioGroup.LayoutParams mLayoutParams = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        RadioButton[] mRadioButtons = new RadioButton[mRecipeList.size()];
+
+        int i = 0;
+        for (Recipe recipe : mRecipeList) {
+            mRadioButtons[i] = new RadioButton(this);
+            mRadioGroupRecipeOptions.addView(mRadioButtons[i]);
+            mRadioButtons[i].setText(recipe.getName());
+            mRadioButtons[i].setTag(recipe.getId());
+            mLayoutParams.setMargins(20, 20, 20, 20);
+            mRadioButtons[i].setLayoutParams(mLayoutParams);
+            mRadioButtons[i].setPadding(40, 0, 0, 0);
+
+            if (mPrevRecipeId != 0) {
+                if (mPrevRecipeId == recipe.getId()) {
+                    mRadioButtons[i].setChecked(true);
+                }
+            }
+        }
+    }
+
+
+    public void processWidgetRecipe() {
+        int selectId = mRadioGroupRecipeOptions.getCheckedRadioButtonId();
+        RadioButton mRadioButton = findViewById(selectId);
+
+        if (mRadioButton != null) {
+            mWidgetRecipe[0] = mRadioButton.getTag().toString();
+
+            mWidgetRecipe[1] = mRadioButton.getText().toString();
+
+            int id = Integer.valueOf(mWidgetRecipe[0]) - 1;
+            List<Ingredient> mIngredients = mRecipeList.get(id).getIngredients();
+
+            StringBuilder ingredientDisplayString = new StringBuilder();
+
+            for (Ingredient ingredient : mIngredients) {
+                ingredientDisplayString.append(
+                        String.format(
+                                "%s %s %s",
+                                ingredient.getIngredient(),
+                                Double.toString(ingredient.getQuantity()),
+                                ingredient.getMeasure().toLowerCase()
+                        )
+                );
+            }
+            mWidgetRecipe[2] = ingredientDisplayString.toString();
+
+
+            BakingAppWidgetService.startActionUpdateWidget(mContext, mWidgetRecipe);
+            Intent resultValue = new Intent();
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+            setResult(RESULT_OK, resultValue);
+            finish();
+
+        } else {
+            mWidgetRecipe[0] = "0";
+            mWidgetRecipe[1] = "";
+            mWidgetRecipe[2] = this.getString(R.string.appwidget_text);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        processIntentExtras();
+    }
+
+
+    private void processIntentExtras() {
+        Intent intent = getIntent();
+        if (intent.getExtras() != null) {
+            Bundle bundle = intent.getExtras();
+            String[] previousRecipe = bundle.getStringArray(WIDGET_RECIPE);
+            mPrevRecipeId = (previousRecipe != null) ? Integer.valueOf(previousRecipe[0]) : 0;
+        }
+    }
+}

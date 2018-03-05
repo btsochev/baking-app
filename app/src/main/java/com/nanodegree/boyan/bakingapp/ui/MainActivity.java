@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements IDataReceived, Re
     public void onDataReceived(List<Recipe> recipes) {
         recipesData.clear();
         recipesData.addAll(recipes);
+        BakingApp.recipes.clear();
+        BakingApp.recipes.addAll(recipes);
         adapter.notifyDataSetChanged();
     }
 
