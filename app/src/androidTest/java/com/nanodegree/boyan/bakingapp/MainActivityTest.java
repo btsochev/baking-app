@@ -60,7 +60,7 @@ public class MainActivityTest {
                 .perform(RecyclerViewActions
                         .scrollToPosition(STEPS_LIST_SCROLL_POSITION));
 
-        // Check if step name as displayed on the specified position of Steps RecyclerView list matches the given name
+        // Check step name on the specified position of Steps RecyclerView
         onView(withText(STEP_NAME))
                 .check(matches(isDisplayed()));
 
@@ -82,12 +82,12 @@ public class MainActivityTest {
     @Test
     public void testRecipeNameAtPosition() {
 
-        // Perform scroll action on Recipe RecyclerView list
+        // Perform scroll action on Recipe RecyclerView
         onView(withId(R.id.recipes_rv))
                 .perform(RecyclerViewActions
                         .scrollToPosition(RECIPE_LIST_SCROLL_POSITION));
 
-        // Check if recipe name as displayed on the specified position of Recipe RecyclerView list matches the given name
+        // Check recipe name on the specified position of Recipes RecyclerView
         onView(withText(RECIPE_NAME))
                 .check(matches(isDisplayed()));
     }

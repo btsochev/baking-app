@@ -35,7 +35,7 @@ public class WidgetActivity extends AppCompatActivity {
     int mPrevRecipeId;
 
     @BindView(R.id.recipe_options_rg)
-    RadioGroup mRadioGroupRecipeOptions;
+    RadioGroup mRadioGroupRecipe;
     @BindView(R.id.choose_recipe_btn)
     Button mButton;
 
@@ -55,7 +55,7 @@ public class WidgetActivity extends AppCompatActivity {
         mWidgetRecipe = new String[3];
 
         processIntent();
-        displayRecipeOptions();
+        displayRecipeList();
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -72,23 +72,23 @@ public class WidgetActivity extends AppCompatActivity {
     }
 
 
-    public void displayRecipeOptions() {
+    public void displayRecipeList() {
         RadioGroup.LayoutParams mLayoutParams = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        RadioButton[] mRadioButtons = new RadioButton[mRecipeList.size()];
+        RadioButton[] radioButtonsArray = new RadioButton[mRecipeList.size()];
 
         int i = 0;
         for (Recipe recipe : mRecipeList) {
-            mRadioButtons[i] = new RadioButton(this);
-            mRadioGroupRecipeOptions.addView(mRadioButtons[i]);
-            mRadioButtons[i].setText(recipe.getName());
-            mRadioButtons[i].setTag(recipe.getId());
+            radioButtonsArray[i] = new RadioButton(this);
+            mRadioGroupRecipe.addView(radioButtonsArray[i]);
+            radioButtonsArray[i].setText(recipe.getName());
+            radioButtonsArray[i].setTag(recipe.getId());
             mLayoutParams.setMargins(20, 20, 20, 20);
-            mRadioButtons[i].setLayoutParams(mLayoutParams);
-            mRadioButtons[i].setPadding(30, 0, 0, 0);
+            radioButtonsArray[i].setLayoutParams(mLayoutParams);
+            radioButtonsArray[i].setPadding(30, 0, 0, 0);
 
             if (mPrevRecipeId != 0) {
                 if (mPrevRecipeId == recipe.getId()) {
-                    mRadioButtons[i].setChecked(true);
+                    radioButtonsArray[i].setChecked(true);
                 }
             }
         }
@@ -96,7 +96,7 @@ public class WidgetActivity extends AppCompatActivity {
 
 
     public void processWidgetRecipe() {
-        int selectId = mRadioGroupRecipeOptions.getCheckedRadioButtonId();
+        int selectId = mRadioGroupRecipe.getCheckedRadioButtonId();
         RadioButton mRadioButton = findViewById(selectId);
 
         if (mRadioButton != null) {
