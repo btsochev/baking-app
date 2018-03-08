@@ -54,17 +54,14 @@ public class WidgetActivity extends AppCompatActivity {
         mRecipeList = BakingApp.recipes;
         mWidgetRecipe = new String[3];
 
-        processIntentExtras();
+        processIntent();
         displayRecipeOptions();
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            mAppWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
+            mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
-
 
         mButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -76,9 +73,7 @@ public class WidgetActivity extends AppCompatActivity {
 
 
     public void displayRecipeOptions() {
-        mButton = findViewById(R.id.choose_recipe_btn);
         RadioGroup.LayoutParams mLayoutParams = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
         RadioButton[] mRadioButtons = new RadioButton[mRecipeList.size()];
 
         int i = 0;
@@ -89,7 +84,7 @@ public class WidgetActivity extends AppCompatActivity {
             mRadioButtons[i].setTag(recipe.getId());
             mLayoutParams.setMargins(20, 20, 20, 20);
             mRadioButtons[i].setLayoutParams(mLayoutParams);
-            mRadioButtons[i].setPadding(40, 0, 0, 0);
+            mRadioButtons[i].setPadding(30, 0, 0, 0);
 
             if (mPrevRecipeId != 0) {
                 if (mPrevRecipeId == recipe.getId()) {
@@ -115,17 +110,10 @@ public class WidgetActivity extends AppCompatActivity {
             StringBuilder ingredientDisplayString = new StringBuilder();
 
             for (Ingredient ingredient : mIngredients) {
-                ingredientDisplayString.append(
-                        String.format(
-                                "%s %s %s",
-                                ingredient.getIngredient(),
-                                Double.toString(ingredient.getQuantity()),
-                                ingredient.getMeasure().toLowerCase()
-                        )
-                );
+                ingredientDisplayString.append(String.format("%s %s %s", ingredient.getIngredient(),
+                        Double.toString(ingredient.getQuantity()), ingredient.getMeasure().toLowerCase()));
             }
             mWidgetRecipe[2] = ingredientDisplayString.toString();
-
 
             BakingAppWidgetService.startActionUpdateWidget(mContext, mWidgetRecipe);
             Intent resultValue = new Intent();
@@ -144,15 +132,14 @@ public class WidgetActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        processIntentExtras();
+        processIntent();
     }
 
 
-    private void processIntentExtras() {
+    private void processIntent() {
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
-            Bundle bundle = intent.getExtras();
-            String[] previousRecipe = bundle.getStringArray(WIDGET_RECIPE);
+            String[] previousRecipe = intent.getExtras().getStringArray(WIDGET_RECIPE);
             mPrevRecipeId = (previousRecipe != null) ? Integer.valueOf(previousRecipe[0]) : 0;
         }
     }

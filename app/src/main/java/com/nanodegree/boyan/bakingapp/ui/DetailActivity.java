@@ -43,8 +43,6 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailFra
                     .replace(R.id.container_recipe_detail, recipeDetailFragment)
                     .commit();
 
-        } else {
-
         }
     }
 

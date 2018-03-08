@@ -1,7 +1,6 @@
 package com.nanodegree.boyan.bakingapp.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,18 +15,15 @@ import android.widget.TextView;
 import com.nanodegree.boyan.bakingapp.R;
 import com.nanodegree.boyan.bakingapp.data.Ingredient;
 import com.nanodegree.boyan.bakingapp.data.Recipe;
-import com.nanodegree.boyan.bakingapp.data.Step;
 
 import org.parceler.Parcels;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class RecipeDetailFragment extends Fragment implements StepsAdapter.StepsOnClickHandler {
-    @BindView(R.id.recipe_list_rv)
+    @BindView(R.id.recipe_steps_rv)
     RecyclerView recyclerView;
 
     @BindView(R.id.ingredients)
@@ -42,7 +38,7 @@ public class RecipeDetailFragment extends Fragment implements StepsAdapter.Steps
         try {
             stepClickListener = (OnStepClickListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(String.format("OnStepClickListener Interface not found", context.toString()));
+            throw new ClassCastException("OnStepClickListener Interface not found");
         }
     }
 
