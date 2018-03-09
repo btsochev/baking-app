@@ -54,6 +54,7 @@ public class StepDetailFragment extends Fragment {
 
     private static final String TAG = StepDetailFragment.class.getSimpleName();
     private static final String SELECTED_POSITION = "player_selected_position";
+    private static final String PLAY_STATE = "play_state";
 
     private Recipe mRecipe;
     private Step mStep;
@@ -63,6 +64,7 @@ public class StepDetailFragment extends Fragment {
     private TrackSelector mTrackSelector;
 
     private long mPlayerPosition;
+    boolean isPlayWhenReady = true;
 
     public StepDetailFragment() {
     }
@@ -90,6 +92,7 @@ public class StepDetailFragment extends Fragment {
             createMediaPlayer();
         } else {
             mPlayerPosition = savedInstanceState.getLong(SELECTED_POSITION, 0);
+            isPlayWhenReady = savedInstanceState.getBoolean(PLAY_STATE);
         }
         if (!getResources().getBoolean(R.bool.isTablet))
             resizeMediaPlayer();
@@ -127,7 +130,10 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (mExoPlayer != null) mPlayerPosition = mExoPlayer.getCurrentPosition();
+        if (mExoPlayer != null) {
+            mPlayerPosition = mExoPlayer.getCurrentPosition();
+            isPlayWhenReady = mExoPlayer.getPlayWhenReady();
+        }
         releasePlayer();
     }
 
@@ -135,11 +141,13 @@ public class StepDetailFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(SELECTED_POSITION, mPlayerPosition);
+        outState.putBoolean(PLAY_STATE, isPlayWhenReady);
     }
 
     private void releasePlayer() {
         if (mExoPlayer != null) {
             mPlayerPosition = mExoPlayer.getCurrentPosition();
+            isPlayWhenReady = mExoPlayer.getPlayWhenReady();
         }
 
         if (mExoPlayer != null) {
@@ -193,7 +201,7 @@ public class StepDetailFragment extends Fragment {
             MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(mediaUri);
             mExoPlayer.prepare(mediaSource);
 
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(isPlayWhenReady);
             mExoPlayer.seekTo(mPlayerPosition);
         }
     }
